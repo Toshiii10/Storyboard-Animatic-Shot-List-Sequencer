@@ -1,7 +1,6 @@
 @echo off
-:: Force the terminal to switch to your exact project directory on the D: drive
-cd /d "D:\2nd year and 3rd year\Main Files\tesda\TESDA JAVA\Storyboard & Animatic Shot-List Sequencer"
-
-echo Starting Storyboard_Animatic_Shot-List_Sequencer...
+setlocal
+cd /d "%~dp0"
+if not exist dist\Storyboard.jar call build_windows.bat
+if errorlevel 1 exit /b 1
 java -jar dist\Storyboard.jar
-pause

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#151715">
+  <meta name="description" content="BoardFlow — a little structure for your next big story. Plan shots, refine camera setups, and preview your film's rhythm.">
+  <title>BoardFlow — Storyboard studio</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%23d9ed92'/%3E%3Cpath d='M10 12h20v16H10zm0 7h20M17 12v7m7-7v7' stroke='%23151715' stroke-width='2' fill='none'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/styles.css"><script src="/app.js" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="/" aria-label="BoardFlow home"><span class="brand-mark" data-icon="film"></span>boardflow<span class="brand-dot">.</span></a>
+    <div class="workspace-label"><span class="workspace-avatar">B</span><span>My workspace<small>Your creative corner</small></span></div>
+    <div class="sidebar-heading">STORYBOARDS <button id="new-project" class="icon-button" aria-label="New storyboard" data-icon="plus"></button></div>
+    <nav id="project-list" aria-label="Storyboards"></nav>
+    <button id="import-project" class="sidebar-button"><span data-icon="upload"></span>Import storyboard</button>
+    <input id="import-file" type="file" accept=".json,application/json" hidden>
+    <div class="sidebar-bottom"><div class="little-note"><span class="spark">✳</span><p>Big stories start<br>with a single frame.</p><span class="note-line"></span></div>
+      <button id="help" class="sidebar-button"><span data-icon="help"></span>A little help <kbd>?</kbd></button>
+      <div class="local-label"><span class="status-dot"></span>Local workspace</div>
+    </div>
+  </aside>
+
+  <main class="studio">
+    <header class="topbar"><div class="breadcrumb"><span data-icon="folder"></span>My workspace<span class="slash">/</span><span id="breadcrumb-title">Storyboard</span></div>
+      <div class="top-actions"><button id="save-status" class="save-status" title="Save now"><span class="status-dot"></span><span id="save-label" role="status">Connecting…</span></button><button id="export" class="button quiet"><span data-icon="download"></span>Export</button></div>
+    </header>
+    <div class="workspace-body">
+      <section class="board-workspace" aria-label="Storyboard">
+        <div class="project-heading"><div><div class="eyebrow"><span class="tiny-line"></span> THE STORY STARTS HERE</div>
+          <button id="edit-project" class="project-title-button" title="Edit storyboard details"><h1 id="project-title">Your next story</h1><span data-icon="edit"></span></button>
+          <p id="project-description">Loading your creative workspace…</p></div>
+          <span class="project-tag">PRE-PRODUCTION</span>
+        </div>
+        <div class="project-stats"><span><span data-icon="layers"></span><b id="shot-count">0</b> shots</span><i></i><span><span data-icon="clock"></span><b id="runtime">00:00</b> runtime</span><i></i><span><span data-icon="scene"></span><b id="scene-count">0</b> scenes</span><span class="autosave-note">A little structure. More room to create.</span></div>
+        <div class="board-toolbar"><div class="view-switch" role="group" aria-label="Shot view"><button id="grid-view" class="active" aria-pressed="true"><span data-icon="grid"></span>Board</button><button id="list-view" aria-pressed="false"><span data-icon="list"></span>Shot list</button></div>
+          <div class="board-tools"><label class="search"><span data-icon="search"></span><input id="search" type="search" placeholder="Find a shot…" aria-label="Find a shot"></label><button id="add-shot" class="button primary"><span data-icon="plus"></span>Add shot</button></div>
+        </div>
+        <div id="board" class="shot-grid" aria-label="Shot sequence"><div class="empty-state"><span class="loading-ring"></span><h2>Setting the scene…</h2></div></div>
+        <div class="board-footnote"><span data-icon="move"></span>Drag frames to find your flow. Select a shot to fine-tune the details.<span id="visible-count"></span></div>
+      </section>
+      <aside class="inspector" aria-label="Shot inspector"><div class="inspector-heading"><span>SHOT DETAILS</span><button id="back-to-board" class="inspector-back">↑ Back to board</button><span id="inspector-number" class="mono">—</span></div><div id="inspector-content" class="inspector-content"><div class="inspector-empty"><span data-icon="frame"></span><p>Select a frame.<br>Make it your own.</p></div></div></aside>
+    </div>
+    <footer class="timeline"><div class="timeline-header"><div><span class="eyebrow">THE BIG PICTURE</span><span class="timeline-subtitle">Your story, in sequence</span></div><button id="play" class="button play-button"><span data-icon="play"></span>Play animatic <kbd>Space</kbd></button></div>
+      <div class="timeline-row"><span class="timeline-time mono">00:00</span><div id="timeline-track" class="timeline-track"></div><span id="timeline-end" class="timeline-time mono">00:00</span></div>
+    </footer>
+  </main>
+
+  <dialog id="project-dialog" class="modal"><form id="project-form"><div class="modal-header"><div><span class="eyebrow">A NEW PERSPECTIVE</span><h2 id="project-dialog-title">Start a storyboard</h2></div><button type="button" class="icon-button close-dialog" aria-label="Close" data-icon="close"></button></div>
+    <label>Project title<input id="project-name" maxlength="120" required placeholder="Give your story a name"></label><label>Description<textarea id="project-desc" maxlength="2000" rows="3" placeholder="What is this story about?"></textarea></label>
+    <label id="demo-option" class="checkbox-label"><input id="with-demo" type="checkbox">Start with six example shots</label>
+    <div class="modal-footer"><button id="delete-project" type="button" class="button danger">Delete project</button><button type="button" class="button quiet close-dialog">Cancel</button><button type="submit" id="project-submit" class="button primary">Create storyboard</button></div>
+  </form></dialog>
+  <dialog id="shot-dialog" class="modal"><form id="shot-form"><div class="modal-header"><div><span class="eyebrow">ONE FRAME AT A TIME</span><h2>Add to your story</h2></div><button type="button" class="icon-button close-dialog" aria-label="Close" data-icon="close"></button></div>
+    <label>Shot title<input id="shot-name" maxlength="120" required placeholder="What happens in this frame?"></label><label>Shot type<select id="shot-type"><option value="ESTABLISHING">Establishing shot — set the scene</option><option value="DIALOGUE">Dialogue close-up — find the emotion</option><option value="ACTION">Action tracking shot — follow the movement</option></select></label>
+    <div class="modal-footer"><button type="button" class="button quiet close-dialog">Cancel</button><button type="submit" class="button primary">Add shot</button></div>
+  </form></dialog>
+  <dialog id="export-dialog" class="modal"><div class="modal-header"><div><span class="eyebrow">TAKE YOUR STORY WITH YOU</span><h2>Export storyboard</h2></div><button class="icon-button close-dialog" aria-label="Close" data-icon="close"></button></div>
+    <button id="export-json" class="export-choice"><span data-icon="folder"></span><span><b>BoardFlow project</b><small>A complete JSON backup, including your images. Import it later.</small></span><span data-icon="download"></span></button>
+    <button id="export-csv" class="export-choice"><span data-icon="list"></span><span><b>Shot list spreadsheet</b><small>A CSV of the sequence, camera settings, dialogue, and timing.</small></span><span data-icon="download"></span></button>
+  </dialog>
+  <dialog id="help-dialog" class="modal"><div class="modal-header"><div><span class="eyebrow">FIND YOUR FLOW</span><h2>Your studio, explained</h2></div><button class="icon-button close-dialog" aria-label="Close" data-icon="close"></button></div>
+    <ol class="help-list"><li><b>Build your sequence.</b> Add a shot, choose its type, and give it a title.</li><li><b>Make it visual.</b> Select a card to upload a sketch or photo, choose a camera setup, and add dialogue.</li><li><b>Find the rhythm.</b> Reorder frames with drag and drop or the inspector arrows. Adjust durations, then play the animatic.</li><li><b>Keep your work.</b> Changes save automatically to this computer's database. Export a project backup to share it or move it.</li></ol>
+    <div class="keyboard-help"><span><kbd>N</kbd> Add shot</span><span><kbd>Space</kbd> Preview / pause</span><span><kbd>Ctrl S</kbd> Save</span></div><p class="muted">Animatics are silent previews. Dissolves and fades use the last 0.6 seconds of a shot. This version does not export video.</p>
+  </dialog>
+  <dialog id="player-dialog" class="player-modal"><div class="player-header"><div><span class="eyebrow">ANIMATIC PREVIEW</span><h2 id="player-title"></h2></div><button class="icon-button close-dialog" aria-label="Close preview" data-icon="close"></button></div><div id="player-stage" class="player-stage"></div><div class="player-caption"><b id="player-shot"></b><span id="player-angle"></span></div><p id="player-notes"></p><input id="player-seek" type="range" min="0" max="100" step="0.01" value="0" aria-label="Playback position"><div class="player-controls"><span id="player-time" class="mono"></span><div><button id="player-restart" class="button quiet"><span data-icon="restart"></span>Restart</button><button id="player-toggle" class="button primary">Pause</button></div><span class="muted">Silent animatic</span></div></dialog>
+  <div id="notice" class="notice" role="status" hidden></div>
+  <div id="connection-error" class="connection-error" hidden><span id="error-message"></span><button id="retry-save" class="button quiet">Retry</button><button id="backup-work" class="button quiet">Export backup</button></div>
+  <input id="image-upload" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+  <noscript><p class="connection-error">Enable JavaScript to use the storyboard editor.</p></noscript>
+</body></html>
